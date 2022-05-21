@@ -3,6 +3,7 @@ import Player1 from '../Player1/Player1.js'
 import Player2 from '../Player2/Player2.js'
 import Monitor from '../Monitor/Monitor.js'
 import './TableGame.css'
+import WinnerNote from '../WinnerNote/WinnerNote.js'
 export default class TableGame extends React.Component {
 
     state = {
@@ -18,31 +19,57 @@ export default class TableGame extends React.Component {
 
 
 
-    updateScore = () => {
+    updateGame = (score, winner) => {
         if (this.state.currentPlayer === 'player1') {
             this.setState({
-                player1Score: this.state.player1Score + this.state.player1temp,
+                player1Score: score,
                 currentPlayer: 'player2',
-                player1temp: 0
+                player1temp: 0,
+                gameWinner: winner ? winner : ''
+
             })
+            console.log(score,winner)
         }
         else {
             this.setState({
-                player2Score: this.state.player2Score + this.state.player2temp,
+                player2Score: score,
                 currentPlayer: 'player1',
-                player2temp: 0
+                player2temp: 0,
+                gameWinner: winner ? winner : ''
             })
         }
 
     }
 
     checkGame = () => {
-         
+        console.log(this.state.maxScore);
+        let winner = ''
+        if (this.state.currentPlayer === 'player1') {
+            const score = this.state.player1Score + this.state.player1temp
+            if (score === this.state.maxScore) {
+                console.log(this.state.maxScore)
+                winner = 'player1';
+            }
+            if (score > this.state.maxScore) {
+                winner = 'player2'
+            }
+            this.updateGame(score, winner)
+        }
+        else {
+            const score = this.state.player2Score + this.state.player2temp
+            if (score === this.state.maxScore) {
+                winner = 'player2';
+            }
+            if (score > this.state.maxScore) {
+                winner = 'player1'
+            }
+            this.updateGame(score, winner)
 
-
+        }
     }
 
     updateTemp = (tempscore) => {
+        console.log(this.state.maxScore)
         if (tempscore === (6 + 6)) {
             this.looseHold();
             return
@@ -69,18 +96,34 @@ export default class TableGame extends React.Component {
         this.setState({ maxScore: score })
     }
 
+    setNewGame = () => {
+        this.setState({
+            currentPlayer: 'player1',
+            player1Score: 0,
+            player2Score: 0,
+            player1temp: 0,
+            player2temp: 0,
+            maxScore: 100,
+            gameWinner: ''
+
+        })
+    }
 
 
     render() {
         return (
             <div className='TableGame-container'>
                 <Player1 temp={this.state.player1temp} score={this.state.player1Score} />
-                <Monitor setMaxScore={this.setMaxScore} updateTemp={this.updateTemp} updateScore={this.checkGame} />
+                <Monitor newGame={this.setNewGame} setMaxScore={this.setMaxScore} updateTemp={this.updateTemp} check={this.checkGame} />
                 <Player2 temp={this.state.player2temp} score={this.state.player2Score} />
-                {this.state.gameWinner && <h2>the winner is:{this.state.currentPlayer}</h2>}
+                {this.state.gameWinner && <WinnerNote winner={this.state.currentPlayer} />}
+
+
             </div>
 
         )
     }
 }
+
+// 
 

@@ -5,7 +5,7 @@ class Monitor extends React.Component {
     state = {
         rollDice: '',
         isRoll:false,
-        maxScore:''
+        maxScore:'100'
     
     }
 
@@ -15,7 +15,7 @@ class Monitor extends React.Component {
         const array = this.drawDice(num1, num2);
         this.props.updateTemp(num1+num2);
         this.setState({ rollDice: array , isRoll: true})
-        this.props.setMaxScore(this.state.inputValue);
+        this.props.setMaxScore(this.state.maxScore);
     }
     drawDice(num1, num2) {
 
@@ -27,13 +27,14 @@ class Monitor extends React.Component {
 
     hold = () => {
         if(this.state.isRoll){
-            this.props.checkGame()
+            this.props.check()
             this.setState({isRoll:false})
         }
     }
 
     setMaxScore = (event) => {
         const maxScore = event.target.value;
+        this.setState({maxScore:maxScore})
 
     }
 
@@ -43,7 +44,7 @@ class Monitor extends React.Component {
 
         return (
             <div className="monitor-container">
-                <div className="monitor-button">
+                <div onClick={() => {this.props.newGame()}} className="monitor-button">
                     <img className="icon" alt="problem" src={require('./functionality_icons/plus.png')}></img>
                     <span className="content">NEW GAME</span>
                 </div>
