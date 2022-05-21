@@ -1,0 +1,11 @@
+.winner-container{
+
+    position: absolute;
+    border-radius: 20px;
+    left: 44%;
+    top: 30%;
+    height: 100px;
+    background-color: rgba(42, 152, 247, 0.2);
+    text-align: center;
+
+}
